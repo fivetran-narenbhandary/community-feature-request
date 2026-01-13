@@ -1,0 +1,254 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+  background: #f5f5f5;
+  font-family: Arial, sans-serif;
+}
+
+.form-container {
+  font-family: Arial, sans-serif;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.form-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #1a1a1a;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #374151;
+}
+
+.required-mark {
+  color: #ef4444;
+}
+
+.dropdown-container {
+  position: relative;
+}
+
+.dropdown-trigger {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.dropdown-trigger.active {
+  border-color: #3b82f6;
+}
+
+.dropdown-selections {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.dropdown-placeholder {
+  color: #9ca3af;
+}
+
+.dropdown-selection-item {
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-selection-text {
+  color: #1f2937;
+}
+
+.dropdown-arrow-separator {
+  color: #9ca3af;
+  margin: 0 6px;
+}
+
+.dropdown-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dropdown-clear {
+  color: #9ca3af;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.dropdown-arrow {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.dropdown-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  z-index: 10;
+  overflow: hidden;
+}
+
+.dropdown-header {
+  padding: 8px 12px;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dropdown-back-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #3b82f6;
+  font-size: 14px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dropdown-current-level {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.dropdown-options {
+  max-height: 280px;
+  overflow-y: auto;
+  transition: all 0.15s ease;
+}
+
+.dropdown-options.animating {
+  opacity: 0.5;
+  transform: translateX(10px);
+}
+
+.dropdown-option {
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f3f4f6;
+  background: #fff;
+}
+
+.dropdown-option:hover {
+  background: #f3f4f6;
+}
+
+.dropdown-option-arrow {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.help-text {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+.text-input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.textarea-container {
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.textarea-toolbar {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 6px 8px;
+  background: #f9fafb;
+  display: flex;
+  gap: 4px;
+}
+
+.toolbar-btn {
+  padding: 4px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.toolbar-btn.bold {
+  font-weight: 700;
+}
+
+.toolbar-btn.italic {
+  font-style: italic;
+}
+
+.textarea-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  border: none;
+  outline: none;
+  resize: vertical;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+.submit-btn {
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #3b82f6;
+  background: #dbeafe;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background: #bfdbfe;
+}
