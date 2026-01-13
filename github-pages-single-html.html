@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feature Request Portal</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 20px; background: #f5f5f5; font-family: Arial, sans-serif; }
+    .form-container { max-width: 700px; margin: 0 auto; padding: 24px; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .form-title { font-size: 20px; font-weight: 600; margin-bottom: 24px; color: #1a1a1a; }
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; color: #374151; }
+    .required-mark { color: #ef4444; }
+    .dropdown-container { position: relative; }
+    .dropdown-trigger { width: 100%; padding: 10px 12px; font-size: 14px; border: 1px solid #d1d5db; border-radius: 6px; cursor: pointer; background: #fff; display: flex; align-items: center; justify-content: space-between; }
+    .dropdown-trigger.active { border-color: #3b82f6; }
+    .dropdown-selections { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; flex: 1; }
+    .dropdown-placeholder { color: #9ca3af; }
+    .dropdown-selection-text { color: #1f2937; }
+    .dropdown-arrow-separator { color: #9ca3af; margin: 0 6px; }
+    .dropdown-controls { display: flex; align-items: center; gap: 8px; }
+    .dropdown-clear { color: #9ca3af; cursor: pointer; font-size: 18px; line-height: 1; }
+    .dropdown-clear:hover { color: #6b7280; }
+    .dropdown-arrow { color: #6b7280; font-size: 12px; }
+    .dropdown-panel { position: absolute; top: 100%; left: 0; right: 0; margin-top: 4px; background: #fff; border: 1px solid #d1d5db; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 10; overflow: hidden; }
+    .dropdown-header { padding: 8px 12px; background: #f9fafb; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; gap: 8px; }
+    .dropdown-back-btn { background: none; border: none; cursor: pointer; color: #3b82f6; font-size: 14px; padding: 0; }
+    .dropdown-back-btn:hover { text-decoration: underline; }
+    .dropdown-current-level { color: #6b7280; font-size: 13px; }
+    .dropdown-options { max-height: 280px; overflow-y: auto; }
+    .dropdown-option { padding: 10px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f3f4f6; background: #fff; }
+    .dropdown-option:hover { background: #f3f4f6; }
+    .dropdown-option-arrow { color: #9ca3af; font-size: 12px; }
+    .help-text { font-size: 13px; color: #6b7280; margin-bottom: 20px; }
+    .text-input { width: 100%; padding: 10px 12px; font-size: 14px; border: 1px solid #d1d5db; border-radius: 6px; outline: none; }
+    .textarea-container { border: 1px solid #d1d5db; border-radius: 6px; overflow: hidden; }
+    .textarea-toolbar { border-bottom: 1px solid #e5e7eb; padding: 6px 8px; background: #f9fafb; display: flex; gap: 4px; }
+    .toolbar-btn { padding: 4px 8px; border: 1px solid #d1d5db; border-radius: 4px; background: #fff; cursor: pointer; font-size: 12px; }
+    .textarea-input { width: 100%; padding: 12px; font-size: 14px; border: none; outline: none; resize: vertical; font-family: Arial, sans-serif; line-height: 1.6; min-height: 180px; }
+    .submit-btn { padding: 10px 24px; font-size: 14px; font-weight: 500; color: #3b82f6; background: #dbeafe; border: none; border-radius: 6px; cursor: pointer; }
+    .submit-btn:hover { background: #bfdbfe; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2 class="form-title">What is your feature request about?</h2>
+    
+    <div class="form-group">
+      <label class="form-label">Request Type <span class="required-mark">*</span></label>
+      <div class="dropdown-container">
+        <div class="dropdown-trigger" id="dropdownTrigger" onclick="toggleDropdown()">
+          <div class="dropdown-selections" id="selectionsDisplay">
+            <span class="dropdown-placeholder">Select a category...</span>
+          </div>
+          <div class="dropdown-controls">
+            <span class="dropdown-clear hidden" id="clearBtn" onclick="clearSelections(event)">×</span>
+            <span class="dropdown-arrow" id="dropdownArrow">▼</span>
+          </div>
+        </div>
+        <div class="dropdown-panel hidden" id="dropdownPanel">
+          <div class="dropdown-header hidden" id="dropdownHeader">
+            <button type="button" class="dropdown-back-btn" onclick="goBack(event)">← Back</button>
+            <span class="dropdown-current-level" id="currentLevel"></span>
+          </div>
+          <div class="dropdown-options" id="dropdownOptions"></div>
+        </div>
+      </div>
+    </div>
+    
+    <p class="help-text hidden" id="helpText"></p>
+    
+    <div class="form-group">
+      <label class="form-label">Title <span class="required-mark">*</span></label>
+      <input type="text" class="text-input" id="titleInput" placeholder="Enter a brief title for your request">
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Details</label>
+      <div class="textarea-container">
+        <div class="textarea-toolbar">
+          <button type="button" class="toolbar-btn">T</button>
+          <button type="button" class="toolbar-btn" style="font-weight:700">B</button>
+          <button type="button" class="toolbar-btn" style="font-style:italic">I</button>
+        </div>
+        <textarea class="textarea-input" id="detailsInput" placeholder="Describe your feature request in detail..."></textarea>
+      </div>
+    </div>
+    
+    <button type="button" class="submit-btn" onclick="submitForm()">Submit Post</button>
+  </div>
+
+  <script>
+    const taxonomyData = {
+      "Connector Requests": {
+        "New Connector Request": {
+          fields: [{ label: "Which application or service?" }]
+        },
+        "Existing Connector Improvement": {
+          "New Table / Column": {
+            fields: [
+              { label: "Connector name" },
+              { label: "Table name" },
+              { label: "Column to add" },
+              { label: "API documentation link" }
+            ]
+          },
+          "Performance": { fields: [{ label: "Which connector?" }] },
+          "Configuration / Setup": { fields: [{ label: "Which connector?" }] },
+          "Other": { fields: [{ label: "Which connector?" }] }
+        }
+      },
+      "Destination Requests": {
+        "New Destination Request": {
+          "Cloud Data Warehouse": { fields: [{ label: "Which data warehouse?" }] },
+          "Data Lake": { fields: [{ label: "Which data lake?" }] },
+          "Database Destination": { fields: [{ label: "Which database?" }] },
+          "Streaming Service": { fields: [{ label: "Which streaming platform?" }] }
+        },
+        "Existing Destination Improvement": {
+          "Data Loading/Performance": { fields: [{ label: "Which destination?" }] },
+          "Configuration/Features": { fields: [{ label: "Which destination?" }] },
+          "Data Type/Schema Handling": { fields: [{ label: "Which destination?" }] }
+        }
+      },
+      "Data Activation / Reverse ETL (Census)": {
+        "Connectors": {
+          "New Destination": { fields: [{ label: "Which business application?" }] },
+          "Destination Improvement": { fields: [{ label: "Which rETL destination?" }] },
+          "Source Support": { fields: [{ label: "Which data warehouse/database?" }] }
+        },
+        "Platform Features": {
+          "Reverse ETL": { fields: [], help: "Requests related to how syncs are configured, scheduled, or triggered" },
+          "Datasets": { fields: [], help: "Requests related to the creation or management of datasets" },
+          "Audience Hub": { fields: [], help: "Requests related to building audiences or segments from warehouse data" }
+        }
+      },
+      "Data Transformation & Orchestration": {
+        "Transformations": {
+          "dbt Integration": { fields: [], help: "Requests related to dbt Core integration, packages, or features" },
+          "SQL Transformations": { fields: [], help: "Requests for SQL-based transformation capabilities" },
+          "Transformation Performance": { fields: [], help: "Issues or requests related to transformation speed or reliability" },
+          "Pre-built Transformations": { fields: [], help: "Requests for new pre-built transformation packages or templates" }
+        },
+        "Orchestration & Scheduling": {
+          "Sync Scheduling": { fields: [], help: "Requests for scheduling flexibility, frequency options, or timing controls" },
+          "Dependency Management": { fields: [], help: "Requests for managing dependencies between connectors, transformations, or syncs" },
+          "Workflow Automation": { fields: [], help: "Requests for automated workflows, triggers, or conditional logic" }
+        }
+      },
+      "Platform & User Experience": {
+        "Dashboard & Navigation": {
+          "UI/UX Improvements": { fields: [], help: "Requests for dashboard layout, navigation, or visual improvements" },
+          "Account Overview": { fields: [], help: "Requests related to the account overview dashboard and metrics" },
+          "Connector/Sync Dashboard": { fields: [], help: "Requests for connector or sync status dashboard improvements" }
+        },
+        "Pipeline Configuration": { fields: [], help: "Requests for advanced pipeline features like row filtering, column blocking, relationship mapping" },
+        "Bulk Operations": { fields: [], help: "Requests for bulk editing, pausing, or managing multiple connectors" },
+        "Account & User Management": {
+          "Multi-Account Management": { fields: [], help: "Requests for managing multiple Fivetran accounts or organizations" }
+        },
+        "Support Experience": { fields: [], help: "Requests related to the Support Experience" }
+      },
+      "Monitoring & Observability": {
+        "Logs & Debugging": {
+          "Log Access/Search": { fields: [], help: "Requests for improved log access, search, or filtering capabilities" },
+          "Error Messages/Diagnostics": { fields: [], help: "Requests for clearer error messages or diagnostic information" },
+          "Historical Logs": { fields: [], help: "Requests for longer log retention or historical log access" }
+        },
+        "Alerts & Notifications": { fields: [], help: "Requests for customizing when and how you receive alerts" },
+        "Performance Monitoring": {
+          "Sync Performance Metrics": { fields: [], help: "Requests for metrics on sync speed, throughput, or performance" },
+          "Resource Usage": { fields: [], help: "Requests for visibility into credits, compute, or resource consumption" },
+          "Data Quality Monitoring": { fields: [], help: "Requests for data quality checks, validation, or monitoring" }
+        }
+      },
+      "Developer Tools & APIs": {
+        "Fivetran API": { fields: [], help: "Requests for new REST API endpoints or capabilities, documentation improvements, or API performance/reliability" },
+        "SDKs": { fields: [], help: "Requests related to Connector SDK for building custom connectors or Partner SDK for integrations" }
+      },
+      "Networking, Security & Compliance": {
+        "Network Connectivity": { fields: [], help: "Requests related to VPN Tunnels, Private Networking, Proxy Agent Support, SSH Connections, Hybrid Deployment, or TLS Configuration" },
+        "Security & Access Controls": { fields: [], help: "Requests related to Encryption, Column-level Security, Authentication, SSO / SCIM, or RBAC" },
+        "Compliance & Governance": { fields: [], help: "Requests related to Compliance certifications, Data Residency, or Data Governance" }
+      },
+      "HVR (Self-Hosted Deployment)": {
+        "HVR Channel Requests": {
+          "Capture": { fields: [{ label: "Which database system?" }] },
+          "Refresh": { fields: [{ label: "Which database system?" }] },
+          "Integration": { fields: [{ label: "Which database system?" }] },
+          "Location": { fields: [{ label: "Which database system?" }] }
+        },
+        "HVR Management & Configuration": {
+          "Data Transformation": { fields: [], help: "Requests for HVR-specific data transformation or mapping features" },
+          "HVR Administration": { fields: [], help: "Requests for HVR admin tools, configuration, or management features" },
+          "HVR Monitoring": { fields: [], help: "Requests for HVR-specific monitoring, logging, or observability" }
+        }
+      },
+      "Pricing, Billing & Licensing": {
+        "Pricing Model": {
+          "Credit/Usage-Based Pricing": { fields: [], help: "Requests or questions about credit consumption or usage-based pricing" },
+          "Connector Pricing": { fields: [], help: "Requests about specific connector pricing or connector tiers" },
+          "Custom Pricing": { fields: [], help: "Requests for enterprise or custom pricing arrangements" }
+        },
+        "Billing Features": {
+          "Invoice/Billing Portal": { fields: [], help: "Requests to improve billing portal, invoice access, or payment methods" },
+          "Budgets/Alerts": { fields: [], help: "Requests for budget controls, spending alerts, or cost management" }
+        },
+        "Self-Service Purchasing": { fields: [], help: "Requests to improve self-service buying, renewal, or upgrade experience" }
+      },
+      "Other": { fields: [], help: "Please provide as much detail as possible about your request. Our team will review and assign this to the appropriate product manager." }
+    };
+
+    let selections = [];
+    let isOpen = false;
+
+    function isLeafNode(obj) {
+      return obj && (Array.isArray(obj.fields) || typeof obj.help === 'string');
+    }
+
+    function getCurrentData() {
+      let current = taxonomyData;
+      for (const sel of selections) {
+        current = current[sel];
+      }
+      return current;
+    }
+
+    function getOptions() {
+      let current = taxonomyData;
+      for (const sel of selections) {
+        current = current[sel];
+        if (isLeafNode(current)) return null;
+      }
+      return current ? Object.keys(current) : null;
+    }
+
+    function updateDisplay() {
+      const selectionsEl = document.getElementById('selectionsDisplay');
+      const clearBtn = document.getElementById('clearBtn');
+      const trigger = document.getElementById('dropdownTrigger');
+      const helpTextEl = document.getElementById('helpText');
+      
+      if (selections.length === 0) {
+        selectionsEl.innerHTML = '<span class="dropdown-placeholder">Select a category...</span>';
+        clearBtn.classList.add('hidden');
+        trigger.classList.remove('active');
+      } else {
+        selectionsEl.innerHTML = selections.map((sel, idx) => 
+          `<span class="dropdown-selection-text">${sel}</span>${idx < selections.length - 1 ? '<span class="dropdown-arrow-separator">→</span>' : ''}`
+        ).join('');
+        clearBtn.classList.remove('hidden');
+        trigger.classList.add('active');
+      }
+
+      const currentData = getCurrentData();
+      if (isLeafNode(currentData)) {
+        if (currentData.help && (!currentData.fields || currentData.fields.length === 0)) {
+          helpTextEl.textContent = currentData.help;
+          helpTextEl.classList.remove('hidden');
+        } else {
+          helpTextEl.classList.add('hidden');
+        }
+        
+        if (currentData.fields && currentData.fields.length > 0) {
+          const template = currentData.fields.map(f => `${f.label}: `).join('\n\n') + '\n\nAdditional details:\n';
+          document.getElementById('detailsInput').value = template;
+        }
+      } else {
+        helpTextEl.classList.add('hidden');
+      }
+    }
+
+    function renderOptions() {
+      const options = getOptions();
+      const optionsEl = document.getElementById('dropdownOptions');
+      const headerEl = document.getElementById('dropdownHeader');
+      const currentLevelEl = document.getElementById('currentLevel');
+      
+      if (!options) {
+        closeDropdown();
+        return;
+      }
+
+      if (selections.length > 0) {
+        headerEl.classList.remove('hidden');
+        currentLevelEl.textContent = selections[selections.length - 1];
+      } else {
+        headerEl.classList.add('hidden');
+      }
+
+      optionsEl.innerHTML = options.map(opt => `
+        <div class="dropdown-option" onclick="selectOption('${opt.replace(/'/g, "\\'")}')">
+          <span>${opt}</span>
+          <span class="dropdown-option-arrow">→</span>
+        </div>
+      `).join('');
+    }
+
+    function toggleDropdown() {
+      if (isOpen) {
+        closeDropdown();
+      } else {
+        const currentData = getCurrentData();
+        if (isLeafNode(currentData) && selections.length > 0) {
+          selections = selections.slice(0, -1);
+          updateDisplay();
+        }
+        openDropdown();
+      }
+    }
+
+    function openDropdown() {
+      isOpen = true;
+      document.getElementById('dropdownPanel').classList.remove('hidden');
+      document.getElementById('dropdownArrow').textContent = '▲';
+      renderOptions();
+    }
+
+    function closeDropdown() {
+      isOpen = false;
+      document.getElementById('dropdownPanel').classList.add('hidden');
+      document.getElementById('dropdownArrow').textContent = '▼';
+    }
+
+    function selectOption(option) {
+      selections.push(option);
+      updateDisplay();
+      
+      const currentData = getCurrentData();
+      if (isLeafNode(currentData)) {
+        closeDropdown();
+      } else {
+        renderOptions();
+      }
+    }
+
+    function goBack(event) {
+      event.stopPropagation();
+      if (selections.length > 0) {
+        selections.pop();
+        updateDisplay();
+        renderOptions();
+      }
+    }
+
+    function clearSelections(event) {
+      event.stopPropagation();
+      selections = [];
+      document.getElementById('detailsInput').value = '';
+      updateDisplay();
+      closeDropdown();
+    }
+
+    function submitForm() {
+      alert('Form submitted!');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+      const container = document.querySelector('.dropdown-container');
+      if (!container.contains(event.target) && isOpen) {
+        closeDropdown();
+      }
+    });
+  </script>
+</body>
+</html>
